@@ -14,7 +14,13 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
+	bool isOutOfBound (float x) {
+		float half = Grid.width / 2.0f;
+		return x < -half || x >= half;
+	}
+
 	void Move (float xAxis) {
+		if (isOutOfBound(xAxis)) return;
 		player.transform.position = new Vector3(xAxis, player.transform.position.y, player.transform.position.z);
 	}
 }
