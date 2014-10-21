@@ -18,12 +18,4 @@ public class Grid : MonoBehaviour {
 			}	
 		}
 	}
-
-	void Start () {
-	
-	}
-
-	void Update () {
-	
-	}
 }
