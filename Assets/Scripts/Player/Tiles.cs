@@ -32,7 +32,7 @@ public class Tiles : MonoBehaviour {
 		}
 	}
 
-	public bool Empty () {
+	public bool IsEmpty () {
 		return held == 0;
 	}
 
@@ -43,11 +43,23 @@ public class Tiles : MonoBehaviour {
 	public void Add (GameObject[] newTiles) {
 		int i;
 		for (i = 0; i < newTiles.Length; i++) {
+			if (held + i > maxTilesHeld) break;
 			GameObject tile = newTiles[i];
 			if (tile == null) break;
 			tiles[held + i] = tile;
 		}
 		held += i;
+	}
+
+	public GameObject[] Clear () {
+		int length = tiles.Length;
+		GameObject[] copy = new GameObject[length];
+		for (int i = 0; i < length; i++) {
+			copy[i] = tiles[i];
+			tiles[i] = null;	
+		}
+		held = 0;
+		return copy;
 	}
 
 }

@@ -20,12 +20,15 @@ public class Actions : MonoBehaviour {
 	}
 
 	void Push () {
-
+		int x = (int)transform.position.x;
+		if (!tiles.IsEmpty()) {
+			grid.PushTilesTo(x, tiles.Clear());
+		}
 	}
 
 	void Pull () {
 		int x = (int)transform.position.x;
-		if (tiles.Empty()) {
+		if (tiles.IsEmpty()) {
 			tiles.Add(grid.PullAnyTilesFrom(x));
 		} else {
 			string type = tiles.Type();

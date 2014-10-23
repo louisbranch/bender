@@ -43,6 +43,10 @@ public class Grid : MonoBehaviour {
 		return RemoveTiles(x, type);
 	}
 
+	public void PushTilesTo (int x, GameObject[] tiles) {
+
+	}
+
 	private GameObject[] RemoveTiles (int x, string name) {
 		GameObject[] tiles = new GameObject[height];
 		int index = 0;
