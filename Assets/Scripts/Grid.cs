@@ -12,7 +12,10 @@ public class Grid : MonoBehaviour {
 	// Number of tile rows
 	public int height = 8;
 	
-	public int initialHeight = 6;
+	public int initialHeight = 5;
+
+	// Up and down movement speed
+	public float tileSpeed = 20.0f;
 
 	// Whether the player can move to one side of the screen to the other
 	public bool enableCornerMovement = false;
@@ -35,6 +38,25 @@ public class Grid : MonoBehaviour {
 		}
 	}
 
+	private void Update () {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				GameObject tile = grid[x,y];
+				if (tile == null) continue;
+				tile.renderer.enabled = true;
+				Vector3 origin = tile.transform.position;
+				if (origin.x != x) {
+					origin.x = x;
+					tile.transform.position = origin;
+				}
+				Vector3 destiny = new Vector3(x, y, origin.z);
+				if (origin == destiny) continue;
+				float step = tileSpeed * Time.deltaTime;
+				tile.transform.position = Vector3.MoveTowards(origin, destiny, step);
+			}
+		}
+	}
+
 	public GameObject[] PullAnyTilesFrom (int x) {
 		return RemoveTiles(x, null);
 	}
@@ -44,7 +66,15 @@ public class Grid : MonoBehaviour {
 	}
 
 	public void PushTilesTo (int x, GameObject[] tiles) {
-
+		int index = 0;
+		int last = height - 1;
+		for (int y = last; y >= 0; y--) {
+			GameObject tile = tiles[index];
+			if (tile == null) break;
+			if (grid[x,y] != null) continue;
+			grid[x,y] = tile;
+			index++;
+		}
 	}
 
 	private GameObject[] RemoveTiles (int x, string name) {

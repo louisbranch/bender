@@ -21,10 +21,11 @@ public class Tiles : MonoBehaviour {
 			GameObject tile = tiles[i];
 			if (tile == null) break;
 			if (!tile.renderer.enabled) continue;
+			Vector3 origin = tile.transform.position;
 			if (tile.transform.position.y > 0) {
-				tile.transform.position = new Vector3(tile.transform.position.x, 
-				                                      tile.transform.position.y - tileSpeed * Time.deltaTime,
-				                                      tile.transform.position.z);
+				tile.transform.position = new Vector3(origin.x, 
+				                                      origin.y - tileSpeed * Time.deltaTime,
+				                                      origin.z);
 			} else {
 				tile.renderer.enabled = false;
 			}
@@ -55,7 +56,9 @@ public class Tiles : MonoBehaviour {
 		int length = tiles.Length;
 		GameObject[] copy = new GameObject[length];
 		for (int i = 0; i < length; i++) {
-			copy[i] = tiles[i];
+			GameObject tile = tiles[i];
+			if (tile == null) break;
+			copy[i] = tile;
 			tiles[i] = null;	
 		}
 		held = 0;
