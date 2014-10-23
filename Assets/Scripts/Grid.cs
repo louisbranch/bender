@@ -10,7 +10,9 @@ public class Grid : MonoBehaviour {
 	public int width = 11;
 
 	// Number of tile rows
-	public int height = 6;
+	public int height = 8;
+	
+	public int initialHeight = 6;
 
 	// Whether the player can move to one side of the screen to the other
 	public bool enableCornerMovement = false;
@@ -25,11 +27,12 @@ public class Grid : MonoBehaviour {
 	private GameObject[] movingTiles;
 
 	void Awake () {
+		int bottomGap = height - initialHeight;
 		grid = new GameObject[width,height];
 		movingTiles = new GameObject[height];
 
 		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
+			for (int y = bottomGap; y < height; y++) {
 				int rand = Random.Range(0, tiles.Length);
 				GameObject tile = tiles[rand];
 				GameObject t = (GameObject)Instantiate(tile);
@@ -41,6 +44,7 @@ public class Grid : MonoBehaviour {
 
 	public GameObject[] PullAnyTilesFrom (int x) {
 		string name = null;
+		int index = 0;
 		for (int y = 0; y < height; y++) {
 			GameObject tile = grid[x,y];
 			if (tile == null) continue;
@@ -50,7 +54,8 @@ public class Grid : MonoBehaviour {
 				if (tile.name != name) break;
 			}
 			grid[x,y] = null;
-			movingTiles[y] = tile;
+			movingTiles[index] = tile;
+			index++;
 		}
 		return movingTiles;
 	}
@@ -59,9 +64,14 @@ public class Grid : MonoBehaviour {
 		for (int i = 0; i < movingTiles.Length; i++) {
 			GameObject tile = movingTiles[i];
 			if (tile == null) break;
-			tile.transform.position = new Vector3(tile.transform.position.x, 
-			                                      tile.transform.position.y - tileSpeed * Time.deltaTime,
-			                                      tile.transform.position.z);
+			if (tile.transform.position.y > 0) {
+				tile.transform.position = new Vector3(tile.transform.position.x, 
+				                                      tile.transform.position.y - tileSpeed * Time.deltaTime,
+				                                      tile.transform.position.z);
+			} else {
+				tile.renderer.enabled = false;
+			}
+
 		}
 	}
 
