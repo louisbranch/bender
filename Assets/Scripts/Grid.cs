@@ -4,6 +4,7 @@ using System.Collections;
 public class Grid : MonoBehaviour {
 
 	public GameObject[] tiles;
+
 	public static int width = 11;
 	public static int height = 6;
 	private GameObject [,] grid = new GameObject[width,height];
