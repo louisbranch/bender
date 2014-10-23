@@ -5,6 +5,14 @@ public class PlayerMovement : MonoBehaviour {
 
 	public GameObject player;
 
+	void Start () {
+		int middle = Grid.width / 2;
+		player.transform.position = new Vector3(middle, 
+		                                        player.transform.position.y, 
+		                                        player.transform.position.z);
+	}
+
+
 	// Update is called once per frame
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
@@ -14,13 +22,15 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
-	bool isOutOfBound (float x) {
-		float half = Grid.width / 2.0f;
-		return x < -half || x >= half;
+	bool IsOutOfBound (float x) {
+
+		return x < 0 || x >= Grid.width;
 	}
 
 	void Move (float xAxis) {
-		if (isOutOfBound(xAxis)) return;
-		player.transform.position = new Vector3(xAxis, player.transform.position.y, player.transform.position.z);
+		if (IsOutOfBound(xAxis)) return;
+		player.transform.position = new Vector3(xAxis, 
+		                                        player.transform.position.y, 
+		                                        player.transform.position.z);
 	}
 }
