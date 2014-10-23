@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Grid : MonoBehaviour {
 
-	public GameObject tile;
+	public GameObject[] tiles;
 	public static int width = 11;
 	public static int height = 6;
 	private GameObject [,] grid = new GameObject[width,height];
@@ -11,9 +11,10 @@ public class Grid : MonoBehaviour {
 	void Awake () {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
+				int rand = Random.Range(0, tiles.Length - 1);
+				GameObject tile = tiles[rand];
 				GameObject t = (GameObject)Instantiate(tile);
 				t.transform.position = new Vector3(x, y, t.transform.position.z);
-				t.renderer.material.color = new Color(Random.value,Random.value,Random.value,1);
 				grid[x,y] = t;
 			}	
 		}
