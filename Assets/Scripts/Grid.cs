@@ -20,4 +20,25 @@ public class Grid : MonoBehaviour {
 			}	
 		}
 	}
+
+	public void PullAnyTilesFrom (Vector3 destiny) {
+		int x = (int) destiny.x;
+		string name = null;
+		for (int y = 0; y < height; y++) {
+			GameObject tile = grid[x,y];
+			if (tile == null) continue;
+			if (name == null) {
+				name = tile.name;
+			} else {
+				if (tile.name != name) break;
+			}
+			grid[x,y] = null;
+			Vector3 origin = tile.transform.position;
+			tile.transform.position = Vector3.Lerp(origin, destiny, 1);
+		}
+	}
+
+	public void PullTilesTypeFrom (int x, GameObject type) {
+		
+	}
 }

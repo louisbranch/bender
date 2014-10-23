@@ -4,7 +4,7 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour {
 
 	public GameObject player;
-	public bool cornerMovement = false;
+	public bool hasCornerMovement = false;
 	private int maxGridSize;
 
 	void Start () {
@@ -21,12 +21,12 @@ public class PlayerMovement : MonoBehaviour {
 		}
 	}
 
-	bool IsOutOfBound (float x) {
+	private bool IsOutOfBound (float x) {
 		return x < 0 || x > maxGridSize;
 	}
 
-	void Move (float xAxis) {
-		if (cornerMovement) {
+	private void Move (float xAxis) {
+		if (hasCornerMovement) {
 			if (xAxis < 0) xAxis = maxGridSize;
 			else if (xAxis > maxGridSize) xAxis = 0;
 		} else if (IsOutOfBound(xAxis)) {
