@@ -4,12 +4,14 @@ using System.Collections;
 public class Grid : MonoBehaviour {
 
 	public GameObject[] tiles;
+	public int width = 11;
+	public int height = 6;
+	public bool enableCornerMovement = false;
 
-	public static int width = 11;
-	public static int height = 6;
-	private GameObject [,] grid = new GameObject[width,height];
+	private GameObject [,] grid;
 
 	void Awake () {
+		grid = new GameObject[width,height];
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
 				int rand = Random.Range(0, tiles.Length);

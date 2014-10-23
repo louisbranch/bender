@@ -2,15 +2,14 @@
 using System.Collections;
 
 public class PlayerActions : MonoBehaviour {
-
-	public GameObject player;
+	
 	private Grid grid;
 
 	private int holdingTiles = 0;
 	private GameObject tileType;
 
 	void Start () {
-		grid = GameObject.Find("Tiles").GetComponent<Grid>();
+		grid = GameObject.Find("TilesGrid").GetComponent<Grid>();
 	}
 	
 	void Update () {
@@ -27,7 +26,7 @@ public class PlayerActions : MonoBehaviour {
 
 	void Pull () {
 		if (holdingTiles == 0) {
-			grid.PullAnyTilesFrom(player.transform.position);
+			grid.PullAnyTilesFrom(transform.position);
 		}
 	}
 }

@@ -3,21 +3,22 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
 
-	public GameObject player;
-	public bool hasCornerMovement = false;
 	private int maxGridSize;
 
+	private Grid grid;
+
 	void Start () {
-		maxGridSize = Grid.width - 1;
+		grid = GameObject.Find("TilesGrid").GetComponent<Grid>();
+		maxGridSize = grid.width - 1;
 		int middleScreen = maxGridSize / 2;
 		Move(middleScreen);
 	}
 	
 	void Update () {
 		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-			Move(player.transform.position.x - 1);
+			Move(transform.position.x - 1);
 		} else if (Input.GetKeyDown(KeyCode.RightArrow)) {
-			Move(player.transform.position.x + 1);
+			Move(transform.position.x + 1);
 		}
 	}
 
@@ -26,13 +27,13 @@ public class PlayerMovement : MonoBehaviour {
 	}
 
 	private void Move (float xAxis) {
-		if (hasCornerMovement) {
+		if (grid.enableCornerMovement) {
 			if (xAxis < 0) xAxis = maxGridSize;
 			else if (xAxis > maxGridSize) xAxis = 0;
 		} else if (IsOutOfBound(xAxis)) {
 			return;
 		}
-		Vector3 p = player.transform.position;
-		player.transform.position = new Vector3(xAxis, p.y, p.z);
+		Vector3 p = transform.position;
+		transform.position = new Vector3(xAxis, p.y, p.z);
 	}
 }
