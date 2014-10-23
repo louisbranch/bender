@@ -11,7 +11,7 @@ public class Grid : MonoBehaviour {
 	void Awake () {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				int rand = Random.Range(0, tiles.Length - 1);
+				int rand = Random.Range(0, tiles.Length);
 				GameObject tile = tiles[rand];
 				GameObject t = (GameObject)Instantiate(tile);
 				t.transform.position = new Vector3(x, y, t.transform.position.z);
