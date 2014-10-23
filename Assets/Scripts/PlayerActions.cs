@@ -4,9 +4,8 @@ using System.Collections;
 public class PlayerActions : MonoBehaviour {
 	
 	private Grid grid;
-
-	private int holdingTiles = 0;
-	private GameObject tileType;
+	private GameObject[] holdingTiles = new GameObject[10];
+	private int holdingTilesIndex = -1;
 
 	void Start () {
 		grid = GameObject.Find("TilesGrid").GetComponent<Grid>();
@@ -25,8 +24,20 @@ public class PlayerActions : MonoBehaviour {
 	}
 
 	void Pull () {
-		if (holdingTiles == 0) {
-			grid.PullAnyTilesFrom(transform.position);
+		GameObject[] tiles = null;
+		if (holdingTilesIndex == -1) {
+			tiles = grid.PullAnyTilesFrom(Column());
+			holdingTilesIndex = tiles.Length -1;
 		}
+		if (tiles == null) return;
+		for (int i = 0; i < holdingTilesIndex; i++) {
+			GameObject tile = tiles[i];
+			if (tile == null) break;
+			holdingTiles[i] = tile;
+		}
+	}
+
+	private int Column() {
+		return (int)transform.position.x;
 	}
 }
