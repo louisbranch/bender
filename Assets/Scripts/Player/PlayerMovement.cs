@@ -17,9 +17,9 @@ public class PlayerMovement : MonoBehaviour {
 	
 	private void Update () {
 		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-			Move(transform.position.x - 1);
+			Move(transform.localPosition.x - 1);
 		} else if (Input.GetKeyDown(KeyCode.RightArrow)) {
-			Move(transform.position.x + 1);
+			Move(transform.localPosition.x + 1);
 		} else if (Input.GetKeyDown(KeyCode.UpArrow)) {
 			Push();
 		} else if (Input.GetKeyDown(KeyCode.DownArrow)) {
@@ -43,14 +43,14 @@ public class PlayerMovement : MonoBehaviour {
 	}
 
 	private void Push () {
-		float x = transform.localPosition.x;
+		int x = (int)transform.localPosition.x;
 		if (!tiles.IsEmpty()) {
 			grid.PushTilesTo(x, tiles.Clear());
 		}
 	}
 	
 	private void Pull () {
-		float x = transform.localPosition.x;
+		int x = (int)transform.localPosition.x;
 		if (tiles.IsEmpty()) {
 			tiles.Add(grid.PullAnyTilesFrom(x));
 		} else {
