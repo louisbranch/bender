@@ -4,7 +4,7 @@ using System.Collections;
 public class Grid : MonoBehaviour {
 
 	// List which kind of tiles are enabled for this grid
-	public GameObject[] tiles;
+	public GameObject[] tileTypes;
 
 	// Number of tile columns
 	public int width = 11;
@@ -29,13 +29,19 @@ public class Grid : MonoBehaviour {
 
 		for (int x = 0; x < width; x++) {
 			for (int y = bottomGap; y < height; y++) {
-				int rand = Random.Range(0, tiles.Length);
-				GameObject tile = tiles[rand];
+				int rand = Random.Range(0, tileTypes.Length);
+				GameObject tile = tileTypes[rand];
 				GameObject t = (GameObject)Instantiate(tile);
-				t.transform.position = new Vector3(x, y, t.transform.position.z);
+				t.transform.parent = transform;
+				t.transform.localPosition = new Vector3(IndexToX(x), IndexToY(y), t.transform.localPosition.z);
 				grid[x,y] = t;
 			}	
 		}
+	}
+
+	void OnDrawGizmos() {
+		Gizmos.color = new Color(0, 1, 1, 0.5F);
+		Gizmos.DrawCube(transform.position, new Vector3(width, height, 1));
 	}
 
 	private void Update () {
@@ -43,29 +49,31 @@ public class Grid : MonoBehaviour {
 			for (int y = 0; y < height; y++) {
 				GameObject tile = grid[x,y];
 				if (tile == null) continue;
+				float position = IndexToX(x);
 				tile.renderer.enabled = true;
-				Vector3 origin = tile.transform.position;
-				if (origin.x != x) {
-					origin.x = x;
-					tile.transform.position = origin;
+				Vector3 origin = tile.transform.localPosition;
+				if (origin.x != position) {
+					origin.x = position;
+					tile.transform.localPosition = origin;
 				}
-				Vector3 destiny = new Vector3(x, y, origin.z);
+				Vector3 destiny = new Vector3(position, IndexToY(y), origin.z);
 				if (origin == destiny) continue;
 				float step = tileSpeed * Time.deltaTime;
-				tile.transform.position = Vector3.MoveTowards(origin, destiny, step);
+				tile.transform.localPosition = Vector3.MoveTowards(origin, destiny, step);
 			}
 		}
 	}
 
-	public GameObject[] PullAnyTilesFrom (int x) {
-		return RemoveTiles(x, null);
+	public GameObject[] PullAnyTilesFrom (float position) {
+		return RemoveTiles(position, null);
 	}
 	
-	public GameObject[] PullTilesTypeFrom (int x, string type) {
-		return RemoveTiles(x, type);
+	public GameObject[] PullTilesTypeFrom (float position, string type) {
+		return RemoveTiles(position, type);
 	}
 
-	public void PushTilesTo (int x, GameObject[] tiles) {
+	public void PushTilesTo (float position, GameObject[] tiles) {
+		int x = XToIndex(position);
 		int index = 0;
 		int last = height - 1;
 		for (int y = last; y >= 0; y--) {
@@ -77,7 +85,8 @@ public class Grid : MonoBehaviour {
 		}
 	}
 
-	private GameObject[] RemoveTiles (int x, string name) {
+	private GameObject[] RemoveTiles (float position, string name) {
+		int x = XToIndex(position);
 		GameObject[] tiles = new GameObject[height];
 		int index = 0;
 		for (int y = 0; y < height; y++) {
@@ -93,5 +102,17 @@ public class Grid : MonoBehaviour {
 			index++;
 		}
 		return tiles;
+	}
+
+	private float IndexToX (int x) {
+		return x - width/2;
+	}
+	
+	private float IndexToY (int y) {
+		return y - height/2 + 1.5f;
+	}
+
+	private int XToIndex (float x) {
+		return (int)(x + width/2);
 	}
 }

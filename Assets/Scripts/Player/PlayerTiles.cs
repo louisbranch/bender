@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tiles : MonoBehaviour {
+public class PlayerTiles : MonoBehaviour {
 
 	// Max number of tiles a player can hold at the same time
 	public int maxTilesHeld = 10;
@@ -22,7 +22,7 @@ public class Tiles : MonoBehaviour {
 			if (tile == null) break;
 			if (!tile.renderer.enabled) continue;
 			Vector3 origin = tile.transform.position;
-			if (tile.transform.position.y > 0) {
+			if (tile.transform.localPosition.y > transform.localPosition.y + 1) {
 				tile.transform.position = new Vector3(origin.x, 
 				                                      origin.y - tileSpeed * Time.deltaTime,
 				                                      origin.z);
