@@ -23,9 +23,8 @@ public class PlayerTiles : MonoBehaviour {
 			if (!tile.renderer.enabled) continue;
 			Vector3 origin = tile.transform.position;
 			if (tile.transform.localPosition.y > transform.localPosition.y + 1) {
-				tile.transform.position = new Vector3(origin.x, 
-				                                      origin.y - tileSpeed * Time.deltaTime,
-				                                      origin.z);
+				float newY = origin.y - tileSpeed * Time.deltaTime;
+				tile.transform.position = new Vector3(origin.x, newY, origin.z);
 			} else {
 				tile.renderer.enabled = false;
 			}

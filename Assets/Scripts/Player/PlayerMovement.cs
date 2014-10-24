@@ -6,12 +6,15 @@ public class PlayerMovement : MonoBehaviour {
 	private Grid grid;
 	private PlayerTiles tiles;
 
-	private int midScreen;
+	private int minX;
+	private int maxX;
 
 	void Start () {
 		grid = GetComponentInParent<Grid>();
 		tiles = GetComponent<PlayerTiles>();
-		midScreen = (grid.width - 1) / 2;
+		int half = grid.width / 2;
+		minX = -half;
+		maxX = grid.width % 2 == 0 ? half - 1 : half;
 		Move(0);
 	}
 	
@@ -28,13 +31,13 @@ public class PlayerMovement : MonoBehaviour {
 	}
 
 	private bool IsOutOfBound (float x) {
-		return x < -midScreen || x > midScreen;
+		return x < minX || x > maxX;
 	}
 
 	private void Move (float xAxis) {
 		if (grid.enableCornerMovement) {
-			if (xAxis < -midScreen) xAxis = midScreen;
-			else if (xAxis > midScreen) xAxis = -midScreen;
+			if (xAxis < minX) xAxis = maxX;
+			else if (xAxis > maxX) xAxis = minX;
 		} else if (IsOutOfBound(xAxis)) {
 			return;
 		}
