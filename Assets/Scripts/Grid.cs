@@ -9,9 +9,10 @@ public class Grid : MonoBehaviour {
 	// Number of tile columns
 	public int width = 11;
 
-	// Number of tile rows
+	// Max number of tile rows
 	public int height = 8;
-	
+
+	// Initial number of tile rows
 	public int initialHeight = 5;
 
 	// Up and down movement speed
@@ -109,7 +110,7 @@ public class Grid : MonoBehaviour {
 	}
 	
 	private float IndexToY (int y) {
-		return y - height/2 + 1.5f;
+		return y - height/2 + 0.5f;
 	}
 
 	private int XToIndex (float x) {

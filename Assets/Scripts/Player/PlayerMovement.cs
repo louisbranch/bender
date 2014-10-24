@@ -12,21 +12,20 @@ public class PlayerMovement : MonoBehaviour {
 	void Start () {
 		grid = GetComponentInParent<Grid>();
 		tiles = GetComponent<PlayerTiles>();
-		int half = grid.width / 2;
-		minX = -half;
-		maxX = grid.width % 2 == 0 ? half - 1 : half;
+		SetBoundaries();
 		Move(0);
 	}
 	
 	private void Update () {
+		int x = (int)transform.localPosition.x;
 		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-			Move(transform.localPosition.x - 1);
+			Move(x - 1);
 		} else if (Input.GetKeyDown(KeyCode.RightArrow)) {
-			Move(transform.localPosition.x + 1);
+			Move(x + 1);
 		} else if (Input.GetKeyDown(KeyCode.UpArrow)) {
-			Push();
+			Push(x);
 		} else if (Input.GetKeyDown(KeyCode.DownArrow)) {
-			Pull();
+			Pull(x);
 		}
 	}
 
@@ -45,15 +44,13 @@ public class PlayerMovement : MonoBehaviour {
 		transform.localPosition = new Vector3(xAxis, p.y, p.z);
 	}
 
-	private void Push () {
-		int x = (int)transform.localPosition.x;
+	private void Push (int x) {
 		if (!tiles.IsEmpty()) {
 			grid.PushTilesTo(x, tiles.Clear());
 		}
 	}
 	
-	private void Pull () {
-		int x = (int)transform.localPosition.x;
+	private void Pull (int x) {
 		if (tiles.IsEmpty()) {
 			tiles.Add(grid.PullAnyTilesFrom(x));
 		} else {
@@ -61,4 +58,11 @@ public class PlayerMovement : MonoBehaviour {
 			tiles.Add(grid.PullTilesTypeFrom(x, type));
 		}
 	}
+
+	private void SetBoundaries () {
+		int half = grid.width / 2;
+		minX = -half;
+		maxX = grid.width % 2 == 0 ? half - 1 : half;
+	}
+
 }
