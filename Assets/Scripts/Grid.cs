@@ -28,6 +28,7 @@ public class Grid : MonoBehaviour {
 		int bottomGap = height - initialHeight;
 		grid = new GameObject[width,height];
 
+
 		for (int x = 0; x < width; x++) {
 			for (int y = bottomGap; y < height; y++) {
 				int rand = Random.Range(0, tileTypes.Length);
@@ -53,11 +54,12 @@ public class Grid : MonoBehaviour {
 				float position = IndexToX(x);
 				tile.renderer.enabled = true;
 				Vector3 origin = tile.transform.localPosition;
+				Vector3 destiny = new Vector3(IndexToX(x), IndexToY(y), origin.z);
 				if (origin.x != position) {
 					origin.x = position;
 					tile.transform.localPosition = origin;
 				}
-				Vector3 destiny = new Vector3(position, IndexToY(y), origin.z);
+
 				if (origin == destiny) continue;
 				float step = tileSpeed * Time.deltaTime;
 				tile.transform.localPosition = Vector3.MoveTowards(origin, destiny, step);
@@ -84,6 +86,9 @@ public class Grid : MonoBehaviour {
 			grid[x,y] = tile;
 			index++;
 		}
+		GameObject sequence = SequenceMovement.Factory(tiles);
+		sequence.transform.parent = transform;
+
 	}
 
 	private GameObject[] RemoveTiles (float position, string name) {
