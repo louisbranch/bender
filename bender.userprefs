@@ -1,13 +1,6 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\SequenceMovement.cs">
-    <Files>
-      <File FileName="Assets\Scripts\SequenceMovement.cs" Line="31" Column="16" />
-      <File FileName="Assets\Scripts\Grid.cs" Line="89" Column="7" />
-      <File FileName="Assets\Scripts\Player\PlayerMovement.cs" Line="14" Column="11" />
-      <File FileName="Assets\Scripts\Player\PlayerTiles.cs" Line="27" Column="59" />
-    </Files>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
