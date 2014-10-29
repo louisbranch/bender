@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class Grid : MonoBehaviour {
@@ -14,9 +14,6 @@ public class Grid : MonoBehaviour {
 
 	// Initial number of tile rows
 	public int initialHeight = 5;
-
-	// Up and down movement speed
-	public float tileSpeed = 20.0f;
 
 	// Whether the player can move to one side of the screen to the other
 	public bool enableCornerMovement = false;
@@ -45,27 +42,8 @@ public class Grid : MonoBehaviour {
 		Gizmos.color = new Color(0, 1, 1, 0.5F);
 		Gizmos.DrawCube(transform.position, new Vector3(width, height, 1));
 	}
-
-	private void Update () {
-		for (int x = 0; x < width; x++) {
-			for (int y = 0; y < height; y++) {
-				GameObject tile = grid[x,y];
-				if (tile == null) continue;
-				float position = IndexToX(x);
-				tile.renderer.enabled = true;
-				Vector3 origin = tile.transform.localPosition;
-				Vector3 destiny = new Vector3(IndexToX(x), IndexToY(y), origin.z);
-				if (origin.x != position) {
-					origin.x = position;
-					tile.transform.localPosition = origin;
-				}
-
-				if (origin == destiny) continue;
-				float step = tileSpeed * Time.deltaTime;
-				tile.transform.localPosition = Vector3.MoveTowards(origin, destiny, step);
-			}
-		}
-	}
+	
+				
 
 	public GameObject[] PullAnyTilesFrom (float position) {
 		return RemoveTiles(position, null);
@@ -77,18 +55,20 @@ public class Grid : MonoBehaviour {
 
 	public void PushTilesTo (float position, GameObject[] tiles) {
 		int x = XToIndex(position);
+		int y;
 		int index = 0;
 		int last = height - 1;
-		for (int y = last; y >= 0; y--) {
+		for (y = last; y >= 0; y--) {
 			GameObject tile = tiles[index];
 			if (tile == null) break;
 			if (grid[x,y] != null) continue;
 			grid[x,y] = tile;
 			index++;
 		}
-		GameObject sequence = SequenceMovement.Factory(tiles);
-		sequence.transform.parent = transform;
-
+		float z = transform.position.z;
+		Vector3 origin = new Vector3(position, IndexToY(1), z);
+		Vector3 destiny = new Vector3(position, IndexToY(y+1), z);
+		new TileGroupFactory(this, tiles, origin, destiny);
 	}
 
 	private GameObject[] RemoveTiles (float position, string name) {
