@@ -18,40 +18,30 @@ public class Grid : MonoBehaviour {
 	// Whether the player can move to one side of the screen to the other
 	public bool enableCornerMovement = false;
 
-	// 2D array of tiles (rows x columns)
+	// 2D array of tiles (columns x rows)
 	private GameObject [,] grid;
-
-	void Awake () {
-		int bottomGap = height - initialHeight;
-		grid = new GameObject[width,height];
-
-		for (int x = 0; x < width; x++) {
-			for (int y = bottomGap; y < height; y++) {
-				int rand = Random.Range(0, tileTypes.Length);
-				GameObject tile = tileTypes[rand];
-				GameObject t = (GameObject)Instantiate(tile);
-				t.transform.parent = transform;
-				t.transform.localPosition = new Vector3(IndexToX(x), IndexToY(y), t.transform.localPosition.z);
-				grid[x,y] = t;
-			}	
-		}
-	}
 
 	void OnDrawGizmos() {
 		Gizmos.color = new Color(0, 1, 1, 0.5F);
-		Gizmos.DrawCube(transform.position, new Vector3(width, height, 1));
+		Vector3 position = transform.position;
+		position.y -= 0.5f; // centralize gizmo
+		Gizmos.DrawCube(position, new Vector3(width, height, 1));
 	}
 
-	public GameObject[] PullAnyTilesFrom (float position) {
-		return RemoveTiles(position, null);
+	void Awake () {
+		CreateTiles();
+	}
+
+	public GameObject[] PullAnyTilesFrom (float column) {
+		return SliceTiles(column, null);
 	}
 	
-	public GameObject[] PullTilesTypeFrom (float position, string type) {
-		return RemoveTiles(position, type);
+	public GameObject[] PullTilesTypeFrom (float column, string type) {
+		return SliceTiles(column, type);
 	}
 
-	public void PushTilesTo (float position, GameObject[] tiles) {
-		int x = XToIndex(position);
+	public void PushTilesTo (float column, GameObject[] tiles) {
+		int x = XToIndex(column);
 		int y;
 		int index = 0;
 		int last = height - 1;
@@ -63,18 +53,21 @@ public class Grid : MonoBehaviour {
 			index++;
 		}
 		float z = transform.position.z;
-		Vector3 origin = new Vector3(position, IndexToY(1), z);
-		Vector3 destiny = new Vector3(position, IndexToY(y+1), z);
+		Vector3 origin = new Vector3(column, IndexToY(1), z);
+		Vector3 destiny = new Vector3(column, IndexToY(y+1), z);
 		TileGroupMovement group = TileGroupFactory.Create(this, tiles, origin, destiny);
 		group.OnEnd(OnCollision);
 	}
 
 	public void OnCollision (GameObject[] tiles) {
-		Debug.Log ("colided!");
+		GameObject first = tiles[0];
+		int column = XToIndex(first.transform.localPosition.x);
+		CheckSequence(column);
+
 	}
 
-	private GameObject[] RemoveTiles (float position, string name) {
-		int x = XToIndex(position);
+	private GameObject[] SliceTiles (float column, string name) {
+		int x = XToIndex(column);
 		GameObject[] tiles = new GameObject[height];
 		int index = 0;
 		for (int y = 0; y < height; y++) {
@@ -92,6 +85,10 @@ public class Grid : MonoBehaviour {
 		return tiles;
 	}
 
+	private void CheckSequence(int x) {
+
+	}
+
 	private float IndexToX (int x) {
 		return x - width/2;
 	}
@@ -102,5 +99,25 @@ public class Grid : MonoBehaviour {
 
 	private int XToIndex (float x) {
 		return (int)(x + width/2);
+	}
+
+	private int FirstTileIndex (int x) {
+		// TODO
+		return x;
+	}
+
+	private void CreateTiles () {
+		int bottomGap = height - initialHeight;
+		grid = new GameObject[width,height];
+		
+		for (int x = 0; x < width; x++) {
+			for (int y = bottomGap; y < height; y++) {
+				int rand = Random.Range(0, tileTypes.Length);
+				GameObject tile = (GameObject)Instantiate(tileTypes[rand]);
+				tile.transform.parent = transform;
+				tile.transform.localPosition = new Vector3(IndexToX(x), IndexToY(y), tile.transform.localPosition.z);
+				grid[x,y] = tile;
+			}	
+		}
 	}
 }
