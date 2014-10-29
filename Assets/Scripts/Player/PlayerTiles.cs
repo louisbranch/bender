@@ -33,9 +33,10 @@ public class PlayerTiles : MonoBehaviour {
 			tiles[held + i] = tile;
 		}
 		held += i;
-		Vector3 origin = newTiles[i - 1].transform.position;
+		if (i == 0) return; // no tiles added
+		Vector3 origin = newTiles[i - 1].transform.localPosition;
 		Vector3 destiny = transform.position;
-		new TileGroupFactory(grid, tiles, origin, destiny);
+		new TileGroupFactory(grid, newTiles, origin, destiny);
 	}
 
 	public GameObject[] Clear () {

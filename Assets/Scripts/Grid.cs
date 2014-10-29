@@ -95,7 +95,7 @@ public class Grid : MonoBehaviour {
 	}
 	
 	private float IndexToY (int y) {
-		return y - height/2 + 0.5f;
+		return y - height/2;
 	}
 
 	private int XToIndex (float x) {
