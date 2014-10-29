@@ -6,30 +6,13 @@ public class PlayerTiles : MonoBehaviour {
 	// Max number of tiles a player can hold at the same time
 	public int maxTilesHeld = 10;
 	
-	// Up and down movement speed
-	public float tileSpeed = 20.0f;
-
+	private Grid grid;
 	private GameObject[] tiles;
 	private int held = 0;
-	
-	private void Start () {
-		tiles = new GameObject[maxTilesHeld];
-	}
 
-	private void Update () {
-		for (int i = 0; i < held; i++) {
-			GameObject tile = tiles[i];
-			if (tile == null) break;
-			if (!tile.renderer.enabled) continue;
-			Vector3 origin = tile.transform.position;
-			if (tile.transform.localPosition.y > transform.localPosition.y + 1) {
-				float newY = origin.y - tileSpeed * Time.deltaTime;
-				tile.transform.position = new Vector3(origin.x, newY, origin.z);
-			} else {
-				tile.renderer.enabled = false;
-			}
-			
-		}
+	private void Awake () {
+		grid = transform.parent.GetComponent<Grid>();
+		tiles = new GameObject[maxTilesHeld];
 	}
 
 	public bool IsEmpty () {
@@ -49,6 +32,19 @@ public class PlayerTiles : MonoBehaviour {
 			tiles[held + i] = tile;
 		}
 		held += i;
+		if (i == 0) return; // no tiles added
+		Vector3 origin = newTiles[i - 1].transform.localPosition;
+		Vector3 destiny = transform.position;
+		TileGroupMovement group = TileGroupFactory.Create(grid, newTiles, origin, destiny);
+		group.OnEnd(OnReceive);
+	}
+
+	public void OnReceive (GameObject[] tiles) {
+		for (int i = 0; i < tiles.Length; i++) {
+			GameObject tile = tiles[i];
+			if (tile == null) break;
+			tile.renderer.enabled = false;
+		}
 	}
 
 	public GameObject[] Clear () {
@@ -63,5 +59,4 @@ public class PlayerTiles : MonoBehaviour {
 		held = 0;
 		return copy;
 	}
-
 }
