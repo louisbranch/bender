@@ -25,8 +25,7 @@ public class PlayerTiles : MonoBehaviour {
 
 	public void Add (GameObject[] newTiles) {
 		int i;
-		int length = newTiles.Length;
-		for (i = 0; i < length; i++) {
+		for (i = 0; i < newTiles.Length; i++) {
 			if (held + i > maxTilesHeld) break;
 			GameObject tile = newTiles[i];
 			if (tile == null) break;
@@ -36,7 +35,16 @@ public class PlayerTiles : MonoBehaviour {
 		if (i == 0) return; // no tiles added
 		Vector3 origin = newTiles[i - 1].transform.localPosition;
 		Vector3 destiny = transform.position;
-		new TileGroupFactory(grid, newTiles, origin, destiny);
+		TileGroupMovement group = TileGroupFactory.Create(grid, newTiles, origin, destiny);
+		group.OnEnd(OnReceive);
+	}
+
+	public void OnReceive (GameObject[] tiles) {
+		for (int i = 0; i < tiles.Length; i++) {
+			GameObject tile = tiles[i];
+			if (tile == null) break;
+			tile.renderer.enabled = false;
+		}
 	}
 
 	public GameObject[] Clear () {
@@ -51,5 +59,4 @@ public class PlayerTiles : MonoBehaviour {
 		held = 0;
 		return copy;
 	}
-
 }

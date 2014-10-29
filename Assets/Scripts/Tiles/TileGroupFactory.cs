@@ -5,7 +5,7 @@ public class TileGroupFactory {
 
 	private static GameObject TileSequence;
 
-	public TileGroupFactory(Grid grid, GameObject[] tiles,
+	public static TileGroupMovement Create(Grid grid, GameObject[] tiles,
 	                           Vector3 origin, Vector3 destiny) {
 		if (TileSequence == null) {
 			TileSequence = (GameObject) Resources.LoadAssetAtPath("Assets/Prefabs/TileGroup.prefab", 
@@ -13,12 +13,12 @@ public class TileGroupFactory {
 		}
 
 		GameObject prefab = (GameObject) MonoBehaviour.Instantiate(TileSequence);
-		TileGroupMovement sequence = prefab.GetComponent<TileGroupMovement>();
-
+		TileGroupMovement group = prefab.GetComponent<TileGroupMovement>();
 		prefab.transform.parent = grid.transform;
-		sequence.tiles = tiles;
-		sequence.origin = origin;
-		sequence.destiny = destiny;
+		group.tiles = tiles;
+		group.origin = origin;
+		group.destiny = destiny;
+		return group;
 	}
 
 }

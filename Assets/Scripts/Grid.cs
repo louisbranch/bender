@@ -25,7 +25,6 @@ public class Grid : MonoBehaviour {
 		int bottomGap = height - initialHeight;
 		grid = new GameObject[width,height];
 
-
 		for (int x = 0; x < width; x++) {
 			for (int y = bottomGap; y < height; y++) {
 				int rand = Random.Range(0, tileTypes.Length);
@@ -42,8 +41,6 @@ public class Grid : MonoBehaviour {
 		Gizmos.color = new Color(0, 1, 1, 0.5F);
 		Gizmos.DrawCube(transform.position, new Vector3(width, height, 1));
 	}
-	
-				
 
 	public GameObject[] PullAnyTilesFrom (float position) {
 		return RemoveTiles(position, null);
@@ -58,7 +55,7 @@ public class Grid : MonoBehaviour {
 		int y;
 		int index = 0;
 		int last = height - 1;
-		for (y = last; y >= 0; y--) {
+		for (y = last; y >= 0; y--) { // move from top to bottom
 			GameObject tile = tiles[index];
 			if (tile == null) break;
 			if (grid[x,y] != null) continue;
@@ -68,7 +65,12 @@ public class Grid : MonoBehaviour {
 		float z = transform.position.z;
 		Vector3 origin = new Vector3(position, IndexToY(1), z);
 		Vector3 destiny = new Vector3(position, IndexToY(y+1), z);
-		new TileGroupFactory(this, tiles, origin, destiny);
+		TileGroupMovement group = TileGroupFactory.Create(this, tiles, origin, destiny);
+		group.OnEnd(OnCollision);
+	}
+
+	public void OnCollision (GameObject[] tiles) {
+		Debug.Log ("colided!");
 	}
 
 	private GameObject[] RemoveTiles (float position, string name) {

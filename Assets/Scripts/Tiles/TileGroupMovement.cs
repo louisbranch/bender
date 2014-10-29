@@ -9,6 +9,8 @@ public class TileGroupMovement : MonoBehaviour {
 	public GameObject[] tiles;
 	public Vector3 origin;
 	public Vector3 destiny;
+	public delegate void OnEndCallback(GameObject[] tiles);
+	public OnEndCallback callback;
 
 	private void Start() {
 		transform.localPosition = origin;
@@ -28,12 +30,17 @@ public class TileGroupMovement : MonoBehaviour {
 				if (tile == null) break;
 				tile.transform.parent = transform.parent;
 			}
+			if (callback != null) callback(tiles);
 			Destroy(gameObject);
 		} else {
 			float step = tileSpeed * Time.deltaTime;
 			Vector3 origin = transform.localPosition;
 			transform.localPosition = Vector3.MoveTowards(origin, destiny, step);
 		}
+	}
+
+	public void OnEnd(OnEndCallback fn) {
+		callback += fn;
 	}
 
 }
