@@ -33,7 +33,7 @@ public class PlayerTiles : MonoBehaviour {
 		}
 		held += i;
 		if (i == 0) return; // no tiles added
-		Vector3 origin = newTiles[i - 1].transform.localPosition;
+		Vector3 origin = newTiles[i-1].transform.localPosition;
 		Vector3 destiny = transform.position;
 		TileGroupMovement group = TileGroupFactory.Create(grid, newTiles, origin, destiny);
 		group.OnEnd(OnReceive);

@@ -19,7 +19,7 @@ public class TileGroupMovement : MonoBehaviour {
 			if (tile == null) break;
 			tile.renderer.enabled = true;
 			tile.transform.parent = transform;
-			tile.transform.localPosition = new Vector3(0, i, 0);
+			tile.transform.localPosition = new Vector3(0, -i, 0);
 		}
 	}
 

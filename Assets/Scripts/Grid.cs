@@ -42,19 +42,21 @@ public class Grid : MonoBehaviour {
 
 	public void PushTilesTo (float column, GameObject[] tiles) {
 		int x = XToIndex(column);
-		int y;
+		int row = -1;
 		int index = 0;
 		int last = height - 1;
-		for (y = last; y >= 0; y--) { // move from top to bottom
+		for (int y = last; y >= 0; y--) { // move from top to bottom
 			GameObject tile = tiles[index];
 			if (tile == null) break;
 			if (grid[x,y] != null) continue;
+			if (row < 0) row = y;
 			grid[x,y] = tile;
 			index++;
 		}
+
 		float z = transform.position.z;
 		Vector3 origin = new Vector3(column, IndexToY(1), z);
-		Vector3 destiny = new Vector3(column, IndexToY(y+1), z);
+		Vector3 destiny = new Vector3(column, IndexToY(row), z);
 		TileGroupMovement group = TileGroupFactory.Create(this, tiles, origin, destiny);
 		group.OnEnd(OnCollision);
 	}
@@ -73,11 +75,8 @@ public class Grid : MonoBehaviour {
 		for (int y = 0; y < height; y++) {
 			GameObject tile = grid[x,y];
 			if (tile == null) continue;
-			if (name == null) {
-				name = tile.name;
-			} else {
-				if (tile.name != name) break;
-			}
+			if (name == null) name = tile.name;
+			else if (tile.name != name) break;
 			grid[x,y] = null;
 			tiles[index] = tile;
 			index++;
