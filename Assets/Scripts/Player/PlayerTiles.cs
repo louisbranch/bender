@@ -26,10 +26,13 @@ public class PlayerTiles : MonoBehaviour {
 	public void Add (GameObject[] newTiles) {
 		int i;
 		for (i = 0; i < newTiles.Length; i++) {
-			if (held + i > maxTilesHeld) break;
 			GameObject tile = newTiles[i];
 			if (tile == null) break;
-			tiles[held + i] = tile;
+			if (held + i < maxTilesHeld) {
+				tiles[held + i] = tile;
+			} else {
+				Destroy(tile);
+			}
 		}
 		held += i;
 		if (i == 0) return; // no tiles added
