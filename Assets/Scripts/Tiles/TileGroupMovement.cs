@@ -39,7 +39,7 @@ public class TileGroupMovement : MonoBehaviour {
 		}
 	}
 
-	public void OnEnd(OnEndCallback fn) {
+	public void OnMovementEnd(OnEndCallback fn) {
 		callback += fn;
 	}
 

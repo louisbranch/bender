@@ -68,7 +68,7 @@ public class Grid : MonoBehaviour {
 		Vector3 origin = new Vector3(x, IndexToY(1), z);
 		Vector3 destiny = new Vector3(x, y, z);
 		TileGroupMovement group = TileGroupFactory.Create(this, tiles, origin, destiny);
-		group.OnEnd(OnCollision);
+		group.OnMovementEnd(OnCollision);
 	}
 
 	private GameObject[] SliceTiles (float column, string name) {
