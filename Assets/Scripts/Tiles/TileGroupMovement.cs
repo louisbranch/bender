@@ -13,7 +13,7 @@ public class TileGroupMovement : MonoBehaviour {
 	public OnEndCallback callback;
 
 	private void Start() {
-		transform.localPosition = origin;
+		transform.position = origin;
 		for (int i = 0; i < tiles.Length; i++) {
 			GameObject tile = tiles[i];
 			if (tile == null) break;
@@ -24,18 +24,25 @@ public class TileGroupMovement : MonoBehaviour {
 	}
 
 	private void Update() {
-		if (transform.localPosition == destiny) {
+		bool isStillParent = true;
+		Vector3 origin = transform.localPosition;
+		if (origin == destiny) {
 			for (int i = 0; i < tiles.Length; i++) {
 				GameObject tile = tiles[i];
 				if (tile == null) break;
+
+				// Another movement has taken place
+				if (tile.transform.parent != transform) {
+					isStillParent = false;
+					break;
+				}
 				tile.transform.parent = transform.parent;
 			}
-			if (callback != null) callback(tiles);
+			if (isStillParent && callback != null) callback(tiles);
 			Destroy(gameObject);
 		} else {
 			float step = tileSpeed * Time.deltaTime;
-			Vector3 origin = transform.localPosition;
-			transform.localPosition = Vector3.MoveTowards(origin, destiny, step);
+			transform.position = Vector3.MoveTowards(origin, destiny, step);
 		}
 	}
 
