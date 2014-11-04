@@ -88,7 +88,26 @@ public class Grid : MonoBehaviour {
 	}
 
 	private void CheckSequence(int x) {
+		int y = FirstTileIndex(x);
+		if (y == -1) return;
+		GameObject first = grid[x,y];
+		string name = first.name;
+		int sequence = 0;
+		int i;
+		for (i = y + 1; i < height; i++) {
+			GameObject tile = grid[x,i];
+			if (tile.name != name) break;
+			sequence++;
+		}
+		if (sequence >= 2) MarkForDeletion(x, y, y + sequence);
+	}
 
+	private void MarkForDeletion (int x, int from, int to) {
+		for (; from <= to; from++) {
+			GameObject tile = grid[x,from];
+			Destroy(tile);
+			grid[x, from] = null;
+		}
 	}
 
 	private float IndexToX (int x) {
@@ -103,9 +122,17 @@ public class Grid : MonoBehaviour {
 		return (int)(x + width/2);
 	}
 
+	// Check from bottom to top what is the first index with a tile
+	// returns -1 if column is empty
 	private int FirstTileIndex (int x) {
-		// TODO
-		return x;
+		int index = -1;
+		for (int y = 0; y < height; y++) {
+			GameObject tile = grid[x,y];
+			if (tile == null) continue;
+			index = y;
+			break;
+		}
+		return index;
 	}
 
 	private void CreateTiles () {
