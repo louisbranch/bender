@@ -167,20 +167,15 @@ public class Grid : MonoBehaviour {
 	private void CreateTileRow () {
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
+				bool last = y + 1 == height;
 				GameObject tile = grid[x,y];
-				if (tile == null) continue;
-				int newY = y - 1;
-				if (newY < 0) {
-					GridFull();
-					return;
-				}
-				if (y + 1 == height) {
-					CreateTile(x,y);
+				if (tile == null) {
+					if (last) CreateTile(x, y);
+					continue;
 				} else {
-					grid[x,y] = null;
+					RealocateTile(tile, x, y);
+					if (last) CreateTile(x,y);
 				}
-				grid[x,newY] = tile;
-				MoveTile(tile, x, newY);
 			}
 		}
 	}
@@ -194,5 +189,16 @@ public class Grid : MonoBehaviour {
 	private void GridFull() {
 		//TODO
 		Debug.Log ("Grid is full!");
+	}
+
+	private void RealocateTile(GameObject tile, int x, int y) {
+		int newY = y - 1;
+		if (newY < 0) {
+			GridFull();
+			return;
+		}
+		grid[x,y] = null;
+		grid[x,newY] = tile;
+		MoveTile(tile, x, newY);
 	}
 }
