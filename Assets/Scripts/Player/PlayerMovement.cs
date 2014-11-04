@@ -2,14 +2,21 @@
 using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
-	
+
 	private Grid grid;
 	private PlayerTiles tiles;
 
 	private int minX;
 	private int maxX;
 
-	void Start () {
+	private float movementSpeed = 0.2f;
+	private float nextMovement;
+
+	private void Awake () {
+		nextMovement = Time.time + movementSpeed;
+	}
+
+	private void Start () {
 		grid = GetComponentInParent<Grid>();
 		tiles = GetComponent<PlayerTiles>();
 		SetBoundaries();
@@ -17,13 +24,18 @@ public class PlayerMovement : MonoBehaviour {
 	}
 	
 	private void Update () {
-		if (GameOptions.IsPaused ()) return;
-
 		int x = (int)transform.localPosition.x;
-		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
-			Move(x - 1);
-		} else if (Input.GetKeyDown(KeyCode.RightArrow)) {
-			Move(x + 1);
+
+		if (Input.GetKey(KeyCode.LeftArrow)) {
+			if (nextMovement < Time.time) {
+				Move (x - 1);
+				nextMovement = Time.time + movementSpeed;
+			}
+		} else if (Input.GetKey(KeyCode.RightArrow)) {
+			if (nextMovement < Time.time) {
+				Move (x + 1);
+				nextMovement = Time.time + movementSpeed;
+			}
 		} else if (Input.GetKeyDown(KeyCode.UpArrow)) {
 			Push(x);
 		} else if (Input.GetKeyDown(KeyCode.DownArrow)) {
