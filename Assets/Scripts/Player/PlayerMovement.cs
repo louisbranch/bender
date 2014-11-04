@@ -17,6 +17,8 @@ public class PlayerMovement : MonoBehaviour {
 	}
 	
 	private void Update () {
+		if (GameOptions.IsPaused ()) return;
+
 		int x = (int)transform.localPosition.x;
 		if (Input.GetKeyDown(KeyCode.LeftArrow)) {
 			Move(x - 1);

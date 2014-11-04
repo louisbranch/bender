@@ -24,6 +24,8 @@ public class TileGroupMovement : MonoBehaviour {
 	}
 
 	private void Update() {
+		if (GameOptions.IsPaused ()) return;
+
 		bool isStillParent = true;
 		Vector3 origin = transform.localPosition;
 		if (origin == destiny) {

@@ -37,6 +37,8 @@ public class Grid : MonoBehaviour {
 	}
 
 	private void Update () {
+		if (GameOptions.IsPaused()) return;
+
 		if (spawnTimer < Time.time) {
 			CreateTileRow();
 			spawnTimer += spawnSpeed;
@@ -187,8 +189,7 @@ public class Grid : MonoBehaviour {
 	}
 
 	private void GridFull() {
-		//TODO
-		Debug.Log ("Grid is full!");
+		GameOptions.Pause();
 	}
 
 	private void RealocateTile(GameObject tile, int x, int y) {
