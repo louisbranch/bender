@@ -21,15 +21,26 @@ public class Grid : MonoBehaviour {
 	// 2D array of tiles (columns x rows)
 	private GameObject [,] grid;
 
-	void OnDrawGizmos() {
+	private float spawnTimer;
+	public float spawnSpeed = 10;
+
+	private void OnDrawGizmos() {
 		Gizmos.color = new Color(0, 1, 1, 0.5F);
 		Vector3 position = transform.position;
 		position.y -= 0.5f; // centralize gizmo
 		Gizmos.DrawCube(position, new Vector3(width, height, 1));
 	}
 
-	void Awake () {
-		CreateTiles();
+	private void Awake () {
+		CreateTileGrid();
+		spawnTimer = Time.time + spawnSpeed;
+	}
+
+	private void Update () {
+		if (spawnTimer < Time.time) {
+			CreateTileRow();
+			spawnTimer += spawnSpeed;
+		}
 	}
 
 	public GameObject[] PullAnyTilesFrom (float column) {
@@ -105,8 +116,8 @@ public class Grid : MonoBehaviour {
 	private void MarkForDeletion (int x, int from, int to) {
 		for (; from <= to; from++) {
 			GameObject tile = grid[x,from];
-			Destroy(tile);
 			grid[x, from] = null;
+			Destroy(tile);
 		}
 	}
 
@@ -135,18 +146,53 @@ public class Grid : MonoBehaviour {
 		return index;
 	}
 
-	private void CreateTiles () {
+	private void CreateTile (int x, int y) {
+		int rand = Random.Range(0, tileTypes.Length);
+		GameObject tile = (GameObject)Instantiate(tileTypes[rand]);
+		tile.transform.parent = transform;
+		MoveTile(tile, x, y);
+		grid[x,y] = tile;
+	}
+
+	private void CreateTileGrid () {
 		int bottomGap = height - initialHeight;
 		grid = new GameObject[width,height];
-		
 		for (int x = 0; x < width; x++) {
 			for (int y = bottomGap; y < height; y++) {
-				int rand = Random.Range(0, tileTypes.Length);
-				GameObject tile = (GameObject)Instantiate(tileTypes[rand]);
-				tile.transform.parent = transform;
-				tile.transform.localPosition = new Vector3(IndexToX(x), IndexToY(y), tile.transform.localPosition.z);
-				grid[x,y] = tile;
-			}	
+				CreateTile(x,y);
+			}
 		}
+	}
+
+	private void CreateTileRow () {
+		for (int x = 0; x < width; x++) {
+			for (int y = 0; y < height; y++) {
+				GameObject tile = grid[x,y];
+				if (tile == null) continue;
+				int newY = y - 1;
+				if (newY < 0) {
+					GridFull();
+					return;
+				}
+				if (y + 1 == height) {
+					CreateTile(x,y);
+				} else {
+					grid[x,y] = null;
+				}
+				grid[x,newY] = tile;
+				MoveTile(tile, x, newY);
+			}
+		}
+	}
+
+	private void MoveTile (GameObject tile, int x, int y) {
+		tile.transform.localPosition = new Vector3(IndexToX(x), 
+		                                           IndexToY(y), 
+		                                           tile.transform.localPosition.z);
+	}
+
+	private void GridFull() {
+		//TODO
+		Debug.Log ("Grid is full!");
 	}
 }
