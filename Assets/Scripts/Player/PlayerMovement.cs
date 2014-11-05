@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour {
 	}
 	
 	private void Update () {
+		if (GameOptions.IsPaused()) return;
 		int x = (int)transform.localPosition.x;
 
 		if (Input.GetKey(KeyCode.LeftArrow)) {
@@ -31,14 +32,20 @@ public class PlayerMovement : MonoBehaviour {
 				Move (x - 1);
 				nextMovement = Time.time + movementSpeed;
 			}
-		} else if (Input.GetKey(KeyCode.RightArrow)) {
+		} 
+
+		if (Input.GetKey(KeyCode.RightArrow)) {
 			if (nextMovement < Time.time) {
 				Move (x + 1);
 				nextMovement = Time.time + movementSpeed;
 			}
-		} else if (Input.GetKeyDown(KeyCode.UpArrow)) {
+		} 
+
+		if (Input.GetKeyDown(KeyCode.UpArrow)) {
 			Push(x);
-		} else if (Input.GetKeyDown(KeyCode.DownArrow)) {
+		} 
+
+		if (Input.GetKeyDown(KeyCode.DownArrow)) {
 			Pull(x);
 		}
 	}
