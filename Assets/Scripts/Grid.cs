@@ -73,7 +73,6 @@ public class Grid : MonoBehaviour {
 		GameObject first = tiles[0];
 		int column = XToIndex(first.transform.localPosition.x);
 		CheckSequence(column);
-
 	}
 
 	private void MoveTiles (GameObject[] tiles, float x, float y) {
@@ -175,7 +174,8 @@ public class Grid : MonoBehaviour {
 					if (last) CreateTile(x, y);
 					continue;
 				} else {
-					RealocateTile(tile, x, y);
+					bool moved = RealocateTile(tile, x, y);
+					if (!moved) return;
 					if (last) CreateTile(x,y);
 				}
 			}
@@ -192,14 +192,15 @@ public class Grid : MonoBehaviour {
 		GameOptions.Pause();
 	}
 
-	private void RealocateTile(GameObject tile, int x, int y) {
+	private bool RealocateTile(GameObject tile, int x, int y) {
 		int newY = y - 1;
 		if (newY < 0) {
 			GridFull();
-			return;
+			return false;
 		}
 		grid[x,y] = null;
 		grid[x,newY] = tile;
 		MoveTile(tile, x, newY);
+		return true;
 	}
 }
